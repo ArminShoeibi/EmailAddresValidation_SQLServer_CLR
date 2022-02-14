@@ -1,3 +1,4 @@
+using System;
 using System.Data.SqlTypes;
 using System.Net.Mail;
 
@@ -13,8 +14,15 @@ public partial class UserDefinedFunctions
         if (trimmedEmailAddress.StartsWith(".") ||
             trimmedEmailAddress.EndsWith(".")) return SqlBoolean.False;
 
-        var mailAddress = new MailAddress(trimmedEmailAddress);
-
-        return new SqlBoolean(mailAddress.Address == trimmedEmailAddress);
+        try
+        {
+            var mailAddress = new MailAddress(trimmedEmailAddress);
+            return SqlBoolean.True;
+        }
+        catch (FormatException)
+        {
+            return SqlBoolean.False;
+        }
+     
     }
 }
